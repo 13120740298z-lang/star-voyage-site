@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070b">
+<title>星游记 · 人物专辑 | STAR CAST</title>
+<meta name="description" content="星游记人物专辑原型：风筝开篇、角色档案与蜿蜒时间线。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 11 L12 22 L4 11 Z' fill='%23f0b45f'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-intro">
+
+<!-- ============================================================
+     开篇 · 风筝 / 三段镜头
+     ============================================================ -->
+<div class="intro" id="intro" aria-label="开篇：风筝">
+  <canvas class="intro-canvas" id="introCanvas" aria-hidden="true"></canvas>
+  <div class="intro-grade" aria-hidden="true"></div>
+  <div class="intro-grain" aria-hidden="true"></div>
+
+  <div class="intro-hud" aria-hidden="true">
+    <div class="ih-left">
+      <span class="ih-brand">星游记 · 人物专辑</span>
+      <span class="ih-sub">OPENING SEQUENCE</span>
+    </div>
+    <div class="ih-right">
+      <div class="ih-shot">
+        <span class="ih-shotno" id="shotNo">SHOT 01</span>
+        <span class="ih-shotname" id="shotName">风筝从远方飞来</span>
+      </div>
+      <div class="ih-clock">
+        <span id="introTc">00:00.0</span>
+        <span class="ih-bar"><i id="introBar"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <button class="intro-skip" id="skipIntro" type="button">跳过开篇 <kbd>ESC</kbd></button>
+
+  <div class="click-cue" id="clickCue" aria-hidden="true">
+    <span class="cue-ring"></span>
+    <span class="cue-txt" data-slot="cue_text">点击风筝</span>
+    <span class="cue-en">TAP THE KITE</span>
+  </div>
+
+  <div class="kite-hit" id="kiteHit" role="button" tabindex="-1" aria-label="点击风筝"></div>
+
+  <div class="bubble" id="mcdBubble" aria-live="polite">
+    <span class="bubble-tag">麦当 · 台词</span>
+    <p class="bubble-line" data-slot="mcd_intro_line">【给我，高高的飞起来啊】</p>
+    <button class="voiceslot" type="button" data-audio="M-00" data-src="">
+      <span class="vs-icon" aria-hidden="true"></span>
+      <span class="vs-txt">音 M-00 · 麦当台词</span>
+    </button>
+  </div>
+
+  <div class="film-stage" id="filmStage">
+    <div class="film-wrap">
+      <p class="film-kicker">OPENING CUT · 影片段</p>
+      <div class="gate gate--film" data-media="M-01" data-ratio="16:9" data-dur="6–12s" data-label="位 M-01 · 麦当片段 · 16:9 · 6–12s">
+        <div class="gate__frame">
+          <span class="gate__corner tl"></span><span class="gate__corner tr"></span>
+          <span class="gate__corner bl"></span><span class="gate__corner br"></span>
+          <span class="gate__sweep" aria-hidden="true"></span>
+          <div class="gate__ticks" aria-hidden="true"></div>
+          <div class="gate__mid">
+            <span class="gate__code">位 M-01</span>
+            <span class="gate__type">麦当片段 · OPENING CUT</span>
+            <span class="gate__meta">16:9 · 6–12s</span>
+            <span class="gate__note">空机位 · 素材待接入</span>
+            <span class="gate__standby"><i></i></span>
+          </div>
+          <div class="gate__foot"><span>M-01_CUT.MP4</span><span>AWAITING FOOTAGE</span></div>
+        </div>
+        <div class="gate__media"></div>
+      </div>
+      <p class="film-hint"><span>片段接入后自动播放</span><i></i><span>即将进入 麦当 专辑</span></p>
+    </div>
+  </div>
+
+  <div class="intro-foot" aria-hidden="true">
+    <span>RAINBOW SEA / CHARACTER ARCHIVE</span>
+    <span>PROTOTYPE · 2026</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     应用 · 专辑舞台
+     ============================================================ -->
+<div class="app" id="app">
+
+  <div class="stage-bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-grain"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-cn">星游记</span>
+      <span class="brand-en">STAR CAST</span>
+    </div>
+    <div class="now" aria-live="polite">
+      <span class="now-code" id="nowCode">CH-01</span>
+      <span class="now-name" id="nowName">麦当</span>
+      <span class="now-sep"></span>
+      <span class="now-label">人物专辑 · CHARACTER ALBUM</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="meta-count" id="nowIndex">01 / 04</span>
+      <button class="replay" id="replayIntro" type="button">重看开篇</button>
+      <span class="chip">PROTOTYPE</span>
+    </div>
+  </header>
+
+  <!-- 顶部进度槽 · 风筝落位后常驻 -->
+  <div class="groove" id="groove" aria-label="专辑进度">
+    <span class="groove-cap">现在在谁 / NOW SHOWING</span>
+    <div class="groove-rail" id="grooveRail">
+      <span class="groove-line" aria-hidden="true"><i class="groove-fill" id="grooveFill"></i></span>
+      <div class="groove-ticks" id="grooveTicks"></div>
+    </div>
+    <span class="groove-count" id="grooveCount">01 / 04</span>
+  </div>
+
+  <nav class="mooring" id="mooring" aria-label="角色刻度">
+    <span class="mooring-label">现在在谁<br><em>ON AIR</em></span>
+    <ol class="mooring-scale" id="mooringScale"></ol>
+  </nav>
+
+  <main class="deck" id="deck"></main>
+
+  <!-- 风筝升空轨迹 -->
+  <svg class="flight" id="flight" aria-hidden="true" preserveAspectRatio="none">
+    <path class="flight-path" id="flightPath" d=""></path>
+  </svg>
+
+  <div class="kite" id="kite" role="button" tabindex="0" aria-label="风筝：切换下一位角色，键盘左右方向键同样有效">
+    <div class="kite-float">
+      <span class="kite-glow" aria-hidden="true"></span>
+      <svg class="kite-svg" viewBox="0 0 120 170" aria-hidden="true">
+        <path class="ks-tail ks-tail--1" d="M60 116 C 52 130, 68 140, 56 158"/>
+        <path class="ks-tail ks-tail--2" d="M60 116 C 72 132, 56 144, 68 164"/>
+        <path class="ks-tail ks-tail--3" d="M60 116 C 58 136, 66 148, 60 168"/>
+        <path class="ks-bow" d="M56 136 l 8 0 l -4 6 z"/>
+        <path class="ks-bow" d="M62 152 l 8 0 l -4 6 z"/>
+        <path class="ks-face ks-face--l" d="M60 10 L10 62 L60 114 Z"/>
+        <path class="ks-face ks-face--r" d="M60 10 L110 62 L60 114 Z"/>
+        <path class="ks-edge" d="M60 10 L110 62 L60 114 L10 62 Z"/>
+        <line class="ks-spar" x1="60" y1="10" x2="60" y2="114"/>
+        <line class="ks-spar" x1="10" y1="62" x2="110" y2="62"/>
+        <circle class="ks-knot" cx="60" cy="114" r="2.6"/>
+      </svg>
+    </div>
+    <span class="kite-cap" id="kiteCap">01 · 麦当</span>
+  </div>
+
+  <!-- 咕咚登场台词 -->
+  <div class="ascent-voices" id="gudongVoices" aria-live="polite">
+    <div class="vbubble vbubble--1">
+      <span class="vb-tag">画外 · 咕咚</span>
+      <p data-slot="gudong_v1">【哪来的兔子】</p>
+      <button class="voiceslot" type="button" data-audio="A1" data-src="">
+        <span class="vs-icon" aria-hidden="true"></span>
+        <span class="vs-txt">音 A1 · 咕咚台词</span>
+      </button>
+    </div>
+    <div class="vbubble vbubble--2">
+      <span class="vb-tag">咕咚国王</span>
+      <p data-slot="gudong_v2">【你才是兔子嘞，叫我国王，咕咚国王】</p>
+      <button class="voiceslot" type="button" data-audio="A2" data-src="">
+        <span class="vs-icon" aria-hidden="true"></span>
+        <span class="vs-txt">音 A2 · 咕咚回应</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 时间线节点展开卡片 -->
+  <aside class="moment" id="moment" aria-hidden="true">
+    <div class="moment-head">
+      <span class="moment-idx" id="momentIdx">节点 01 / 05</span>
+      <button class="moment-close" id="momentClose" type="button" aria-label="收起卡片">收 起</button>
+    </div>
+    <h3 class="moment-title" id="momentTitle" data-slot="">故事标题 · 待填</h3>
+    <p class="moment-body" id="momentBody" data-slot="">节点文字位 · 待填。</p>
+    <div class="moment-gate" id="momentGate"></div>
+    <div class="moment-foot"><span id="momentYear">年份位 · 待填</span><span>片段位 / CUT</span></div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="hud" aria-hidden="true">
+    <div class="hud-left">
+      <span class="hud-key">← →</span>
+      <span>键盘切换 · 点击风筝升空</span>
+    </div>
+    <div class="hud-right">
+      <span class="hud-key">SCROLL</span>
+      <span>沿时间线向下</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
