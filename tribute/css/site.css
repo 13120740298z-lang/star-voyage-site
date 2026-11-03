@@ -279,31 +279,6 @@ button { font: inherit; color: inherit; }
   background: #0A0C0D;
   border: 1px solid rgba(247, 247, 231, 0.18);
 }
-.p-play {
-  position: absolute;
-  left: 0; bottom: 34px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 16px 9px 12px;
-  background: rgba(8, 10, 12, 0.78);
-  border: 1px solid var(--edge);
-  border-radius: 2px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  cursor: pointer;
-  transition: background .2s, border-color .2s;
-}
-.p-play:hover { background: rgba(207, 167, 54, 0.2); border-color: var(--gold); }
-.p-play .tri {
-  width: 0; height: 0;
-  border-left: 9px solid var(--gold);
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-}
-.p-visual.playing .p-play { opacity: 0; pointer-events: none; }
-.p-visual.played .p-play { opacity: 1; }
-
 .p-visual figcaption {
   position: absolute;
   left: 0; bottom: 8px;
@@ -433,12 +408,100 @@ button { font: inherit; color: inherit; }
 
 /* ---------- 07 事件 ---------- */
 
-.st-events .st-in { align-content: start; padding-top: calc(var(--barh) + 46px); }
-.ev-hd { display: flex; align-items: baseline; gap: 28px; flex-wrap: wrap; margin-bottom: 26px; }
-.ev-hd .h2 { margin: 0; font-size: clamp(30px, 3.6vw, 52px); }
-.ev-sub { margin: 0; max-width: 30ch; font-size: 12px; line-height: 1.9; }
+.st-events .st-in {
+  align-content: start;
+  padding-top: calc(var(--barh) + 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.ev-hd { display: flex; align-items: baseline; gap: 28px; flex-wrap: wrap; margin-bottom: 22px; }
+.ev-hd .h2 { margin: 0; font-size: clamp(26px, 3.2vw, 44px); }
+.ev-sub { margin: 0; max-width: 52ch; font-size: 12px; line-height: 1.9; }
+
+/* 完整切片播放器 + 时间码清单 */
+.ev-split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(18px, 2.6vw, 38px);
+  align-items: start;
+}
+.ev-player { margin: 0; position: relative; }
+.ev-video {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  display: block;
+  object-fit: cover;
+  background: #050607;
+  border: 1px solid rgba(247, 247, 231, 0.2);
+  cursor: pointer;
+}
+.ev-player figcaption {
+  margin-top: 8px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--stone);
+}
+
+.ev-cues-wrap { min-width: 0; border-top: 1px solid rgba(247, 247, 231, 0.2); }
+.ev-cues-hd {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 6px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--stone);
+  border-bottom: 1px solid rgba(247, 247, 231, 0.12);
+}
+.ev-cues {
+  margin: 0;
+  padding: 4px 0 4px;
+  list-style: none;
+  max-height: 40vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.ev-cue {
+  display: grid;
+  grid-template-columns: 52px 62px minmax(0, 1fr);
+  gap: 4px;
+  padding: 5px 6px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background .2s, border-color .2s;
+}
+.ev-cue:hover { background: rgba(247, 247, 231, 0.05); }
+.ev-cue.on {
+  background: rgba(207, 167, 54, 0.14);
+  border-left-color: var(--gold);
+}
+.ev-cue-t {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--stone);
+}
+.ev-cue-no {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: rgba(247, 247, 231, 0.7);
+}
+.ev-cue-x {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(247, 247, 231, 0.82);
+}
+.ev-cue.on .ev-cue-t,
+.ev-cue.on .ev-cue-no,
+.ev-cue.on .ev-cue-x { color: var(--gold); }
 
 .ev-grid {
+  margin-top: 22px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0 clamp(16px, 2.4vw, 34px);
@@ -710,7 +773,6 @@ button { font: inherit; color: inherit; }
   .p-visual { order: 0 !important; }
   .p-side { order: 1 !important; }
   .p-video { aspect-ratio: 16 / 10; max-height: 30vh; }
-  .p-play { bottom: 30px; padding: 7px 12px; font-size: 10px; }
   .p-visual figcaption { bottom: 6px; }
   .p-name { font-size: 34px; }
   .p-en { margin: 6px 0 14px; font-size: 10px; }
@@ -741,11 +803,17 @@ button { font: inherit; color: inherit; }
   .tl-card p { font-size: 12px; }
 
   /* 事件 */
-  .st-events .st-in { padding-top: calc(var(--barh) + 22px); }
+  .st-events .st-in { padding-top: calc(var(--barh) + 18px); }
   .ev-hd { display: block; margin-bottom: 14px; }
-  .ev-hd .h2 { font-size: 27px; margin-bottom: 8px; }
-  .ev-sub { max-width: none; font-size: 11px; }
-  .ev-grid { grid-template-columns: 1fr; }
+  .ev-hd .h2 { font-size: 24px; margin-bottom: 8px; }
+  .ev-sub { max-width: none; font-size: 11px; line-height: 1.8; }
+  .ev-split { grid-template-columns: 1fr; gap: 12px; }
+  .ev-video { aspect-ratio: 2 / 1; }
+  .ev-player figcaption { font-size: 9px; }
+  .ev-cues { max-height: 30vh; }
+  .ev-cue { grid-template-columns: 44px 52px minmax(0, 1fr); padding: 4px 4px; }
+  .ev-cue-x { font-size: 11px; line-height: 1.45; }
+  .ev-grid { grid-template-columns: 1fr; margin-top: 14px; }
   .ev-head { grid-template-columns: 30px 1fr auto; padding: 13px 2px; }
   .ev-t { font-size: 13px; }
   .ev.open .ev-body { max-height: 300px; }

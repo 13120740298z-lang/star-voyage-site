@@ -1,9 +1,10 @@
 /* 星游记「再飞行」致敬站 · 分屏 + 纸飞机航线
-   结构：state 统一管理当前站、音频解锁、片段播放；所有站点数据来自 js/data.js */
+   音频规则：背景 OP 永不停播，片段出声时只把背景音量降到 0（不暂停）；
+   片段结束停在最后一帧并恢复背景音量。 */
 (function () {
   "use strict";
 
-  var S = window.SITE || { stations: [], clips: {} };
+  var S = window.SITE || { stations: [], clips: {}, titleCards: [] };
   var stations = [].slice.call(document.querySelectorAll(".st"));
   var ticksBox = document.getElementById("ticks");
   var chapno = document.getElementById("chapno");
@@ -14,6 +15,7 @@
   var trailPath = document.getElementById("trailpath");
   var bg = document.getElementById("bgvideo");
   var finalv = document.getElementById("finalv");
+  var evv = document.getElementById("evv");
   var reduceMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   var state = {
@@ -21,6 +23,7 @@
     audioOn: false,
     clipPlaying: null,
     finalPlaying: false,
+    evPlaying: false,
     busy: false,
     px: 0,
     py: 0
@@ -32,11 +35,21 @@
     return [].slice.call(document.querySelectorAll(".p-video"));
   }
 
+  function anyClip() {
+    return !!state.clipPlaying || state.finalPlaying || state.evPlaying;
+  }
+
+  /* 让位：只降背景音量并静音，背景画面继续循环，不暂停、不重播 */
+  function duckBackground(on) {
+    bg.volume = on ? 0 : 1;
+    bg.muted = on || !state.audioOn;
+  }
+
   function updateAudio() {
-    var anyClip = !!state.clipPlaying;
-    bg.muted = !state.audioOn || anyClip || state.finalPlaying;
+    duckBackground(anyClip());
     personVideos().forEach(function (v) { v.muted = !state.audioOn; });
-    if (finalv) finalv.muted = !state.audioOn || anyClip;
+    if (finalv) finalv.muted = !state.audioOn;
+    if (evv) evv.muted = !state.audioOn;
     soundBtn.setAttribute("aria-pressed", state.audioOn ? "true" : "false");
     soundLabel.textContent = state.audioOn ? "关声音" : "开声音";
     if (cta) {
@@ -53,78 +66,237 @@
 
   function toggleAudio() {
     setAudio(!state.audioOn);
-    if (state.audioOn && currentKind() === "person") {
-      var v = currentStation().querySelector(".p-video");
-      var openItem = currentStation().querySelector(".tl-item.open");
-      var t = 0;
-      if (openItem) {
-        var idx = [].indexOf.call(openItem.parentNode.children, openItem);
-        t = clipTime(currentStation(), idx);
-      }
-      startClip(v, t, false);
-    }
-    if (state.audioOn && currentKind() === "final" && finalv && finalv.paused) {
-      finalv.play().catch(function () {});
-      state.finalPlaying = true;
-    }
-    if (!state.audioOn) {
-      personVideos().forEach(function (v) { v.pause(); });
-      state.clipPlaying = null;
-      if (finalv) finalv.pause();
-      state.finalPlaying = false;
-      updateAudio();
-    }
   }
 
-  function startClip(v, t, unlock) {
-    if (!v) return;
-    if (unlock && !state.audioOn) setAudio(true);
-    var dur = v.duration && isFinite(v.duration) ? v.duration : 0;
-    var target = Math.max(0, Math.min(t, dur ? dur - 0.2 : t));
-    function seek() {
-      try {
-        if (Math.abs(v.currentTime - target) > 0.08) v.currentTime = target;
-      } catch (e) {}
-    }
-    if (v.readyState >= 1) {
-      seek();
-    } else {
-      v.addEventListener("loadedmetadata", seek, { once: true });
-    }
-    v.muted = !state.audioOn;
-    var p = v.play();
-    if (p && p.catch) p.catch(function () {});
-    var vis = v.closest(".p-visual");
-    if (vis) vis.classList.add("playing");
-    state.clipPlaying = v;
-    updateAudio();
+  /* 第一次点击解锁音频：排除“开声音”按钮与时间线节点（节点按规则不出声） */
+  function unlockAudio(e) {
+    if (state.audioOn) return;
+    var t = e.target;
+    if (t && t.closest && t.closest("#sound, #cta, .tl-item, .ev-head, .sound")) return;
+    setAudio(true);
   }
-
-  function pauseClip(v) {
-    if (!v) return;
-    v.pause();
-    var vis = v.closest(".p-visual");
-    if (vis) {
-      vis.classList.remove("playing");
-      vis.classList.add("played");
-    }
-    if (state.clipPlaying === v) state.clipPlaying = null;
-    updateAudio();
-  }
-
-  bg.addEventListener("play", function () { bg.muted = !state.audioOn || !!state.clipPlaying || state.finalPlaying; });
+  document.addEventListener("pointerdown", unlockAudio, true);
 
   soundBtn.addEventListener("click", toggleAudio);
   if (cta) cta.addEventListener("click", toggleAudio);
 
+  /* ---------------- 片段播放 ---------------- */
+
+  function seekTo(v, t) {
+    var dur = isFinite(v.duration) && v.duration > 0 ? v.duration : 0;
+    var target = Math.max(0, Math.min(t, dur ? dur - 0.02 : t));
+    try {
+      if (Math.abs(v.currentTime - target) > 0.04) v.currentTime = target;
+    } catch (err) {}
+  }
+
+  function seekWhenReady(v, t) {
+    if (v.readyState >= 1) {
+      seekTo(v, t);
+    } else {
+      v.addEventListener("loadedmetadata", function () { seekTo(v, t); }, { once: true });
+    }
+  }
+
+  function attemptPlay(v) {
+    v.muted = !state.audioOn;
+    var p = v.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        /* 没有手势时先静音播，等第一次点击再出声 */
+        v.muted = true;
+        var p2 = v.play();
+        if (p2 && p2.catch) p2.catch(function () {});
+      });
+    }
+  }
+
+  function pauseOthers(except) {
+    personVideos().forEach(function (v) {
+      if (v !== except) { v.pause(); v.muted = true; }
+    });
+  }
+
+  /* 人物片段：进站自动播放；同一时刻只允许一个片段在播 */
+  function playClip(v, t) {
+    if (!v) return;
+    pauseOthers(v);
+    seekWhenReady(v, t);
+    var vis = v.closest(".p-visual");
+    if (vis) { vis.classList.add("playing"); vis.classList.remove("played"); }
+    state.clipPlaying = v;
+    updateAudio();
+    attemptPlay(v);
+    guardEnd(v);
+  }
+
+  /* 结束：停在最后一帧（在 rAF 里提前 0.06s 暂停，避免 ended 后画面回到 0）；恢复背景音量 */
+  function finishVideo(v) {
+    if (!v) return;
+    try { v.pause(); } catch (err) {}
+    if (v === finalv) {
+      state.finalPlaying = false;
+      updateAudio();
+      return;
+    }
+    if (v === evv) {
+      state.evPlaying = false;
+      updateAudio();
+      syncCue();
+      return;
+    }
+    var vis = v.closest(".p-visual");
+    if (vis) { vis.classList.remove("playing"); vis.classList.add("played"); }
+    if (state.clipPlaying === v) state.clipPlaying = null;
+    updateAudio();
+  }
+
+  function guardEnd(v) {
+    if (v._raf) cancelAnimationFrame(v._raf);
+    function tick() {
+      if (v.paused || v.ended) { v._raf = null; return; }
+      var d = v.duration;
+      if (isFinite(d) && d > 0 && v.currentTime >= d - 0.04) {
+        v._raf = null;
+        finishVideo(v);
+        return;
+      }
+      v._raf = requestAnimationFrame(tick);
+    }
+    v._raf = requestAnimationFrame(tick);
+  }
+
+  function bindPersonVideo(sec, v, times) {
+    v.addEventListener("ended", function () { finishVideo(v); });
+
+    /* 时间线节点：只跳帧 + 更新卡片，不重播、不重载、不打断播放、不出声 */
+    [].slice.call(sec.querySelectorAll(".tl-item")).forEach(function (item, idx) {
+      var btn = item.querySelector(".tl-dot");
+      btn.addEventListener("click", function () {
+        var willOpen = !item.classList.contains("open");
+        closeAllCards();
+        if (!willOpen) return;
+        item.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+        seekWhenReady(v, times[idx] || 0);
+        if (state.clipPlaying !== v) {
+          /* 片段没在播：静默停在目标帧，不自动起播 */
+          v.pause();
+          v.muted = true;
+          var vis = v.closest(".p-visual");
+          if (vis) { vis.classList.remove("playing"); vis.classList.add("played"); }
+        }
+      });
+    });
+  }
+
+  function closeAllCards() {
+    document.querySelectorAll(".tl-item.open").forEach(function (el) {
+      el.classList.remove("open");
+      el.querySelector(".tl-dot").setAttribute("aria-expanded", "false");
+    });
+  }
+
+  /* ---------------- 事件页：完整标题切片 ---------------- */
+
+  var cues = [];
+  var cueEls = [];
+  var cueIdx = -1;
+
+  function buildCues() {
+    var box = document.getElementById("evcues");
+    if (!box || !S.titleCards) return;
+    S.titleCards.forEach(function (c) {
+      var li = document.createElement("li");
+      li.className = "ev-cue";
+      var ts = document.createElement("span");
+      ts.className = "ev-cue-t";
+      ts.textContent = c.t.toFixed(2) + "s";
+      var no = document.createElement("span");
+      no.className = "ev-cue-no";
+      no.textContent = c.no;
+      var ln = document.createElement("span");
+      ln.className = "ev-cue-x";
+      ln.textContent = c.line;
+      li.appendChild(ts);
+      li.appendChild(no);
+      li.appendChild(ln);
+      li.addEventListener("click", function () {
+        seekTo(evv, c.t + 0.02);
+        if (evv.paused) attemptPlay(evv);
+        state.evPlaying = !evv.paused;
+        updateAudio();
+      });
+      box.appendChild(li);
+      cues.push(c);
+      cueEls.push(li);
+    });
+  }
+
+  function syncCue() {
+    if (!evv || !cueEls.length) return;
+    var t = evv.currentTime;
+    var idx = 0;
+    for (var k = 0; k < cues.length; k++) if (t + 0.01 >= cues[k].t) idx = k;
+    if (idx === cueIdx) return;
+    if (cueIdx >= 0 && cueEls[cueIdx]) cueEls[cueIdx].classList.remove("on");
+    cueIdx = idx;
+    var el = cueEls[idx];
+    if (!el) return;
+    el.classList.add("on");
+    var box = el.parentNode;
+    if (el.offsetTop - box.scrollTop < 0 || el.offsetTop - box.scrollTop > box.clientHeight - el.offsetHeight) {
+      box.scrollTop = Math.max(0, el.offsetTop - box.clientHeight / 2 + el.offsetHeight / 2);
+    }
+  }
+
+  function playEvent(t, unlock) {
+    if (!evv) return;
+    if (unlock && !state.audioOn) setAudio(true);
+    seekWhenReady(evv, t);
+    state.evPlaying = true;
+    updateAudio();
+    attemptPlay(evv);
+    guardEnd(evv);
+    syncCue();
+  }
+
+  if (evv) {
+    evv.addEventListener("ended", function () { finishVideo(evv); });
+    evv.addEventListener("timeupdate", syncCue);
+    evv.addEventListener("click", function () { playEvent(0, true); });
+  }
+
+  /* ---------------- 收尾片段 ---------------- */
+
+  function playFinal(t, unlock) {
+    if (!finalv) return;
+    if (unlock && !state.audioOn) setAudio(true);
+    finalv.loop = false;
+    seekWhenReady(finalv, t);
+    state.finalPlaying = true;
+    updateAudio();
+    attemptPlay(finalv);
+    guardEnd(finalv);
+  }
+
+  if (finalv) {
+    finalv.addEventListener("ended", function () { finishVideo(finalv); });
+    finalv.addEventListener("click", function () {
+      if (finalv.paused) playFinal(0, true);
+      else if (!state.audioOn) setAudio(true);
+    });
+  }
+
   /* ---------------- 站点切换 ---------------- */
 
   function currentStation() { return stations[state.i]; }
-  function currentKind() {
-    var id = currentStation().id;
-    for (var k = 0; k < S.stations.length; k++) if (S.stations[k].id === id) return S.stations[k].kind;
+
+  function stationKind(sec) {
+    for (var k = 0; k < S.stations.length; k++) if (S.stations[k].id === sec.id) return S.stations[k].kind;
     return "";
   }
+  function currentKind() { return stationKind(currentStation()); }
 
   function clipTime(sec, idx) {
     var cfg = S.clips[sec.id];
@@ -141,34 +313,26 @@
       if (vis) vis.classList.remove("playing");
       if (state.clipPlaying === v) state.clipPlaying = null;
     }
-    sec.querySelectorAll(".tl-item.open").forEach(function (el) {
+    if (sec.id === "s7" && evv) { evv.pause(); state.evPlaying = false; }
+    if (sec.id === "s9" && finalv) { finalv.pause(); state.finalPlaying = false; }
+    [].slice.call(sec.querySelectorAll(".tl-item.open")).forEach(function (el) {
       el.classList.remove("open");
       el.querySelector(".tl-dot").setAttribute("aria-expanded", "false");
     });
   }
 
   function enterStation(sec) {
-    var kind = "";
-    for (var k = 0; k < S.stations.length; k++) if (S.stations[k].id === sec.id) kind = S.stations[k].kind;
-
+    var kind = stationKind(sec);
     if (kind === "person") {
-      /* 人物片段不自动起播：必须由用户点播放键或时间线节点，才出声 */
-      var v = sec.querySelector(".p-video");
-      if (v) v.muted = !state.audioOn;
-      var vis = v && v.closest(".p-visual");
-      if (vis) vis.classList.remove("playing");
+      /* 进站自动播放该人物片段；未解锁音频时先静音，第一次点击后立刻有声 */
+      playClip(sec.querySelector(".p-video"), 0);
+    } else if (kind === "events") {
+      playEvent(0, false);
     } else if (kind === "final") {
-      if (finalv) {
-        finalv.muted = !state.audioOn;
-        finalv.currentTime = 0;
-        if (!reduceMQ.matches) {
-          var pr = finalv.play();
-          if (pr && pr.catch) pr.catch(function () {});
-          state.finalPlaying = true;
-        }
-      }
+      playFinal(0, false);
+    } else {
+      updateAudio();
     }
-    updateAudio();
   }
 
   function setStation(n) {
@@ -178,7 +342,6 @@
     if (!next) return;
 
     stopStation(prev);
-    if (prev.id === "s9" && finalv) { finalv.pause(); state.finalPlaying = false; }
 
     prev.classList.remove("on");
     prev.setAttribute("aria-hidden", "true");
@@ -236,17 +399,14 @@
   function control(p0, p1) {
     var dx = p1.x - p0.x, dy = p1.y - p0.y;
     var mx = (p0.x + p1.x) / 2, my = (p0.y + p1.y) / 2;
-    var k = 0.26 * Math.sqrt(dx * dx + dy * dy);
     var c1 = { x: mx - dy * 0.26, y: my + dx * 0.26 };
     var c2 = { x: mx + dy * 0.26, y: my - dx * 0.26 };
     /* 两条弧线里选更“向上”的一条，且不出屏 */
     var pick = c1;
     if (c1.y > c2.y) pick = c2;
-    if (k) {
-      if (pick.y < 30) pick.y = 30;
-      if (pick.y > window.innerHeight - 30) pick.y = window.innerHeight - 30;
-      pick.x = Math.min(Math.max(pick.x, 24), window.innerWidth - 24);
-    }
+    if (pick.y < 30) pick.y = 30;
+    if (pick.y > window.innerHeight - 30) pick.y = window.innerHeight - 30;
+    pick.x = Math.min(Math.max(pick.x, 24), window.innerWidth - 24);
     return pick;
   }
 
@@ -294,7 +454,7 @@
     requestAnimationFrame(step);
   }
 
-  function go(n, opts) {
+  function go(n) {
     if (state.busy) return;
     n = ((n % stations.length) + stations.length) % stations.length;
     var reduced = reduceMQ.matches;
@@ -339,56 +499,12 @@
     ticksBox.appendChild(b);
   });
 
-  /* ---------------- 人物片段与时间线 ---------------- */
+  /* ---------------- 人物片段绑定 ---------------- */
 
   stations.forEach(function (sec) {
     var v = sec.querySelector(".p-video");
     if (!v) return;
-
-    var times = (S.clips[sec.id] || {}).times || [];
-
-    var playBtn = sec.querySelector(".p-play");
-    if (playBtn) {
-      playBtn.addEventListener("click", function () {
-        var openItem = sec.querySelector(".tl-item.open");
-        var t = 0;
-        if (openItem) {
-          var idx = [].indexOf.call(openItem.parentNode.children, openItem);
-          t = clipTime(sec, idx);
-        }
-        if (state.clipPlaying === v) { pauseClip(v); return; }
-        startClip(v, t, true);
-      });
-    }
-
-    v.addEventListener("click", function () {
-      if (state.clipPlaying === v) { pauseClip(v); return; }
-      startClip(v, 0, true);
-    });
-
-    v.addEventListener("ended", function () {
-      var vis = v.closest(".p-visual");
-      if (vis) { vis.classList.remove("playing"); vis.classList.add("played"); }
-      if (state.clipPlaying === v) state.clipPlaying = null;
-      updateAudio();
-    });
-
-    [].slice.call(sec.querySelectorAll(".tl-item")).forEach(function (item, idx) {
-      var btn = item.querySelector(".tl-dot");
-      btn.addEventListener("click", function () {
-        var willOpen = !item.classList.contains("open");
-        /* 先全部收起（含其它人物卡） */
-        document.querySelectorAll(".tl-item.open").forEach(function (el) {
-          el.classList.remove("open");
-          el.querySelector(".tl-dot").setAttribute("aria-expanded", "false");
-        });
-        if (!willOpen) { pauseClip(v); return; }
-        item.classList.add("open");
-        btn.setAttribute("aria-expanded", "true");
-        /* 节点 → 视频时间点：画面与音频同时对齐 */
-        startClip(v, times[idx] || 0, true);
-      });
-    });
+    bindPersonVideo(sec, v, (S.clips[sec.id] || {}).times || []);
   });
 
   /* ---------------- 事件卡 ---------------- */
@@ -403,21 +519,6 @@
     });
   });
 
-  /* ---------------- 收尾视频：点本体解锁声音 ---------------- */
-
-  if (finalv) {
-    finalv.addEventListener("click", function () {
-      /* 收尾屏不设额外按钮：点画面即解锁音频并从头播放 */
-      if (!state.audioOn) setAudio(true);
-      finalv.muted = !state.audioOn;
-      if (finalv.paused) {
-        finalv.play().catch(function () {});
-      }
-      state.finalPlaying = !finalv.paused;
-      updateAudio();
-    });
-  }
-
   /* ---------------- 键盘 / 触屏 ---------------- */
 
   document.addEventListener("keydown", function (e) {
@@ -429,7 +530,7 @@
   var touch = null;
   document.addEventListener("touchstart", function (e) {
     if (e.touches.length !== 1) return;
-    if (e.target.closest(".tl-card")) return;
+    if (e.target.closest(".tl-card, .ev-cues")) return;
     touch = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
   }, { passive: true });
 
@@ -461,6 +562,7 @@
   /* ---------------- 初始化 ---------------- */
 
   function init() {
+    buildCues();
     var home = dock();
     placePlane(home.x, home.y, 0);
     stations.forEach(function (sec, i) {

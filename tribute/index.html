@@ -76,10 +76,7 @@
     <div class="st-in p-grid">
       <figure class="p-visual rv" style="--i:0">
         <video class="p-video" data-audio src="media/mcd.mp4" poster="media/mcd-3v.jpg" preload="metadata" playsinline></video>
-        <button class="p-play" type="button" aria-label="播放麦当片段，带声音">
-          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
-        </button>
-        <figcaption>人物片段 · 7.2s / 麦当</figcaption>
+        <figcaption>人物片段 · 7.2s / 麦当 · 进站自动播放</figcaption>
       </figure>
       <div class="p-side">
         <p class="kicker rv" style="--i:1">03 — 人物 · 麦当</p>
@@ -130,10 +127,7 @@
     <div class="st-in p-grid">
       <figure class="p-visual rv" style="--i:0">
         <video class="p-video" data-audio src="media/gudong.mp4" poster="media/gudong-3v.jpg" preload="metadata" playsinline></video>
-        <button class="p-play" type="button" aria-label="播放咕咚片段，带声音">
-          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
-        </button>
-        <figcaption>人物片段 · 7.8s / 咕咚</figcaption>
+        <figcaption>人物片段 · 7.8s / 咕咚 · 进站自动播放</figcaption>
       </figure>
       <div class="p-side">
         <p class="kicker rv" style="--i:1">04 — 人物 · 咕咚</p>
@@ -184,10 +178,7 @@
     <div class="st-in p-grid">
       <figure class="p-visual rv" style="--i:0">
         <video class="p-video" data-audio src="media/diya.mp4" poster="media/diya-3v.jpg" preload="metadata" playsinline></video>
-        <button class="p-play" type="button" aria-label="播放笛亚片段，带声音">
-          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
-        </button>
-        <figcaption>人物片段 · 7.7s / 笛亚</figcaption>
+        <figcaption>人物片段 · 7.7s / 笛亚 · 进站自动播放</figcaption>
       </figure>
       <div class="p-side">
         <p class="kicker rv" style="--i:1">05 — 人物 · 笛亚</p>
@@ -238,10 +229,7 @@
     <div class="st-in p-grid">
       <figure class="p-visual rv" style="--i:0">
         <video class="p-video" data-audio src="media/milong.mp4" poster="media/milong.jpg" preload="metadata" playsinline></video>
-        <button class="p-play" type="button" aria-label="播放米龙片段，带声音">
-          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
-        </button>
-        <figcaption>人物片段 · 11.4s / 米龙</figcaption>
+        <figcaption>人物片段 · 11.4s / 米龙 · 进站自动播放</figcaption>
       </figure>
       <div class="p-side">
         <p class="kicker rv" style="--i:1">06 — 人物 · 米龙</p>
@@ -291,9 +279,19 @@
   <section class="st st-events" id="s7" aria-hidden="true" data-title="事件">
     <div class="st-in">
       <div class="ev-hd">
-        <p class="kicker rv" style="--i:0">07 — 事件 / 经典战役</p>
-        <h2 class="h2 rv" style="--i:1">五个绕不过去的节点</h2>
-        <p class="body ev-sub rv" style="--i:2">点开每一条，看它留在片子里的是哪一帧。</p>
+        <p class="kicker rv" style="--i:0">07 — 事件 / 第 26 集开场</p>
+        <h2 class="h2 rv" style="--i:1">26 张标题卡，7.79 秒</h2>
+        <p class="body ev-sub rv" style="--i:2">这是第 26 集开头那条标题切片：第 1 站到第 26 站，26 张卡一张不少。完整放入，未裁剪、未抽帧替换；右边按时间码排好，播到哪一张就亮哪一条。</p>
+      </div>
+      <div class="ev-split">
+        <figure class="ev-player rv" style="--i:3">
+          <video id="evv" class="ev-video" src="media/final.mp4" poster="media/final.jpg" playsinline preload="metadata"></video>
+          <figcaption>第 26 集开场标题合集 · 7.79s · 原片原声 · 播完停最后一帧</figcaption>
+        </figure>
+        <div class="ev-cues-wrap rv" style="--i:4">
+          <div class="ev-cues-hd"><span>时间码</span><span>站 / 章节标题</span></div>
+          <ol class="ev-cues" id="evcues" aria-label="标题卡时间码"></ol>
+        </div>
       </div>
       <div class="ev-grid">
         <article class="ev">
@@ -326,7 +324,7 @@
           </button>
           <div class="ev-body">
             <img src="media/ev-03.jpg" alt="第 12 站标题画面">
-            <p>“撕碎寒风！白色的野兽。”走到这里，冷已经不是天气，是拦在航线上的东西。</p>
+            <p>“撕裂寒风！白色的野兽。”走到这里，冷已经不是天气，是拦在航线上的东西。</p>
           </div>
         </article>
         <article class="ev">
@@ -351,7 +349,7 @@
             <p>“用心向前！格斗的螺旋。”越往后打，越不像在打人，像在跟命运掰手腕。</p>
           </div>
         </article>
-        <p class="ev-note">五张标题卡都取自片尾合集（第 1–22 站），画面本身来自原作。</p>
+        <p class="ev-note">五张放大卡与上方播放器同源：都取自第 26 集开场那条 7.79 秒切片（第 1、6、12、17、22 站）。</p>
       </div>
     </div>
     <span class="anchor" aria-hidden="true"></span>
@@ -381,8 +379,8 @@
   <!-- 09 收尾 -->
   <section class="st st-final" id="s9" aria-hidden="true" data-title="收尾">
     <div class="st-in final-in">
-      <video class="final-v" id="finalv" src="media/final.mp4" poster="media/final.jpg" playsinline preload="metadata" loop></video>
-      <p class="final-line rv" style="--i:1">第 1 站到第 22 站，每一站都有名字；<br>只有彩虹海，一直没写上门牌号。</p>
+      <video class="final-v" id="finalv" src="media/final.mp4" poster="media/final.jpg" playsinline preload="metadata"></video>
+      <p class="final-line rv" style="--i:1">第 1 站到第 26 站，每一站都有名字；<br>只有彩虹海，一直没写上门牌号。</p>
       <footer class="foot foot-final rv" style="--i:2">
         <p>非官方粉丝致敬站。片段版权归原作者与出品方所有，仅作介绍与回忆用途。</p>
       </footer>
