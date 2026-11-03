@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>星游记 · 再飞行 / 非官方粉丝致敬</title>
+<meta name="description" content="《星游记》片头曲《再飞行》的非官方粉丝致敬站：九站航线，人物、事件与静帧。">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<!-- 片头曲：固定全屏背景，静音循环；点“开声音”才出声 -->
+<video class="bg" id="bgvideo" src="media/op-bg.mp4" autoplay muted loop playsinline preload="auto"></video>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- 纸飞机航线 -->
+<svg class="trail" aria-hidden="true" focusable="false">
+  <path id="trailpath" d="" fill="none"></path>
+</svg>
+<button class="plane" id="plane" type="button" aria-label="让纸飞机飞到下一站">
+  <svg viewBox="0 0 48 48" aria-hidden="true">
+    <path d="M3.5 23.2 44 5.6 30.6 42.4 23.4 27.2Z" fill="currentColor"/>
+    <path d="M23.4 27.2 44 5.6 26.6 30.6Z" fill="rgba(0,0,0,.28)"/>
+  </svg>
+</button>
+
+<header class="bar">
+  <div class="bar-l">
+    <span class="mark">星游记</span>
+    <span class="tag">非官方致敬</span>
+  </div>
+  <div class="ticks" id="ticks" role="tablist" aria-label="站点进度"></div>
+  <div class="bar-r">
+    <span class="chap"><span id="chapno">01</span> / 09</span>
+    <button id="sound" class="sound" type="button" aria-pressed="false">
+      <span class="dot" aria-hidden="true"></span><span id="soundlabel">开声音</span>
+    </button>
+  </div>
+</header>
+
+<main id="deck">
+
+  <!-- 01 开场 -->
+  <section class="st st-hero on" id="s1" aria-hidden="false" data-title="开场">
+    <div class="st-in">
+      <p class="kicker rv" style="--i:0">01 — 片头曲 ·《再飞行》</p>
+      <h1 class="hero-h rv" style="--i:1">把 91 秒<br><em>还给 2011 年</em></h1>
+      <p class="hero-p rv" style="--i:2">《再飞行》响起来的时候，我们都还相信宇宙尽头有一片海。<br>下面的画面全部来自这条片头曲，没有一张是画的。</p>
+      <div class="hero-act rv" style="--i:3">
+        <button class="cta" id="cta" type="button">开声音，听片头曲</button>
+        <span class="hint">或直接点右下的纸飞机，一站一站看下去</span>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 02 世界观 -->
+  <section class="st st-world" id="s2" aria-hidden="true" data-title="世界观">
+    <div class="st-in">
+      <div class="w-txt">
+        <p class="kicker rv" style="--i:0">02 — 世界观</p>
+        <h2 class="h2 rv" style="--i:1">宇宙是一片<br>可以飞过去的海</h2>
+        <p class="body rv" style="--i:2">《星游记》讲的是一群人把“不可能”当作起跑线的故事。飞行不是交通工具，是一种态度：只要有坐标，就敢往星星的方向走。</p>
+        <p class="body rv" style="--i:3">星学会负责把星图读出来，飞船负责把人送出去，而彩虹海——那是所有人共同的目的地，也是所有人共同的借口。</p>
+      </div>
+      <figure class="w-clip rv" style="--i:2">
+        <img src="media/still-01.jpg" alt="片头曲中的宇宙画面：星海、行星与航路">
+        <figcaption>片头曲 05.0s · 宇宙与航路</figcaption>
+      </figure>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 03 麦当 -->
+  <section class="st st-person" id="s3" aria-hidden="true" data-title="麦当">
+    <div class="st-in p-grid">
+      <figure class="p-visual rv" style="--i:0">
+        <video class="p-video" data-audio src="media/mcd.mp4" poster="media/mcd-3v.jpg" preload="metadata" playsinline></video>
+        <button class="p-play" type="button" aria-label="播放麦当片段，带声音">
+          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
+        </button>
+        <figcaption>人物片段 · 7.2s / 麦当</figcaption>
+      </figure>
+      <div class="p-side">
+        <p class="kicker rv" style="--i:1">03 — 人物 · 麦当</p>
+        <h2 class="p-name rv" style="--i:2">麦当</h2>
+        <p class="p-en rv" style="--i:3">MAI DANG</p>
+        <blockquote class="p-quote rv" style="--i:4">「真正相信奇迹的家伙」</blockquote>
+        <ol class="tl rv" style="--i:5">
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">约定</span><span class="tl-t">十年前的约定</span></button>
+            <div class="tl-card">
+              <img src="media/mcd-hero.png" alt="麦当举拳，身后是金色的月亮">
+              <h4>十年前的约定</h4>
+              <p>父亲麦林出海去找彩虹海，走前只留下一句话。麦当把那句话当成地址，一记就是十年。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">第 1 站</span><span class="tl-t">风筝见证</span></button>
+            <div class="tl-card">
+              <img src="media/ev-01.jpg" alt="第 1 站标题：风筝见证，我要去彩虹海">
+              <h4>风筝见证，我要去彩虹海</h4>
+              <p>没有飞船，就先放一只风筝。他用最土的办法证明自己能飞，然后真的出发了。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">同行</span><span class="tl-t">三个人一条船</span></button>
+            <div class="tl-card">
+              <img src="media/mcd-3v.jpg" alt="麦当角色设定三视图">
+              <h4>遇见咕咚与笛亚</h4>
+              <p>一个要回自己的星球，一个要把星图读完，一个只想去彩虹海。三个理由，同一条航线。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">第 22 站</span><span class="tl-t">格斗的螺旋</span></button>
+            <div class="tl-card">
+              <img src="media/ev-05.jpg" alt="第 22 站标题：用心向前，格斗的螺旋">
+              <h4>用心向前</h4>
+              <p>“把不可能当成起跑线”——这句话不是口号，是他每一站都在做的事。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 04 咕咚 -->
+  <section class="st st-person st-r" id="s4" aria-hidden="true" data-title="咕咚">
+    <div class="st-in p-grid">
+      <figure class="p-visual rv" style="--i:0">
+        <video class="p-video" data-audio src="media/gudong.mp4" poster="media/gudong-3v.jpg" preload="metadata" playsinline></video>
+        <button class="p-play" type="button" aria-label="播放咕咚片段，带声音">
+          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
+        </button>
+        <figcaption>人物片段 · 7.8s / 咕咚</figcaption>
+      </figure>
+      <div class="p-side">
+        <p class="kicker rv" style="--i:1">04 — 人物 · 咕咚</p>
+        <h2 class="p-name rv" style="--i:2">咕咚</h2>
+        <p class="p-en rv" style="--i:3">GU DONG</p>
+        <blockquote class="p-quote rv" style="--i:4">「叫我国王 咕咚国王」</blockquote>
+        <ol class="tl rv" style="--i:5">
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">出身</span><span class="tl-t">兔子星的王</span></button>
+            <div class="tl-card">
+              <img src="media/gudong-3v.jpg" alt="咕咚角色设定三视图：王冠、斗篷、绿短裤">
+              <h4>王冠是真的，国家没了</h4>
+              <p>白兔、绿发、一顶小王冠。他坚持别人叫他“咕咚国王”，因为那是他仅剩的东西。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">第 6 站</span><span class="tl-t">兔子诅咒</span></button>
+            <div class="tl-card">
+              <img src="media/ev-02.jpg" alt="第 6 站标题：兔子诅咒，所有人的背叛">
+              <h4>所有人的背叛</h4>
+              <p>“兔子诅咒，所有人的背叛”。王座塌下来的时候，站在他身边的一个人也没有。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">结盟</span><span class="tl-t">把飞船押上</span></button>
+            <div class="tl-card">
+              <img src="media/still-09.jpg" alt="片头曲中的宇宙航路">
+              <h4>和麦当做一笔交易</h4>
+              <p>他要回自己的星球，麦当要去彩虹海。两条路刚好同向，于是他交出了飞船。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">终点</span><span class="tl-t">把星球找回来</span></button>
+            <div class="tl-card">
+              <img src="media/gudong.jpg" alt="咕咚片段画面">
+              <h4>国王的返航</h4>
+              <p>他不是去冒险，他是去把自己的国家从诅咒里赎回来。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 05 笛亚 -->
+  <section class="st st-person" id="s5" aria-hidden="true" data-title="笛亚">
+    <div class="st-in p-grid">
+      <figure class="p-visual rv" style="--i:0">
+        <video class="p-video" data-audio src="media/diya.mp4" poster="media/diya-3v.jpg" preload="metadata" playsinline></video>
+        <button class="p-play" type="button" aria-label="播放笛亚片段，带声音">
+          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
+        </button>
+        <figcaption>人物片段 · 7.7s / 笛亚</figcaption>
+      </figure>
+      <div class="p-side">
+        <p class="kicker rv" style="--i:1">05 — 人物 · 笛亚</p>
+        <h2 class="p-name rv" style="--i:2">笛亚</h2>
+        <p class="p-en rv" style="--i:3">DI YA</p>
+        <blockquote class="p-quote rv" style="--i:4">「相信奇迹的人，本身就和奇迹一样了不起。」</blockquote>
+        <ol class="tl rv" style="--i:5">
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">出身</span><span class="tl-t">星学会的书</span></button>
+            <div class="tl-card">
+              <img src="media/diya-3v.jpg" alt="笛亚角色设定三视图：蓝发、白大衣、抱书">
+              <h4>把星图抱在怀里</h4>
+              <p>那本厚书是星学会留下的东西。她走到哪里都带着，像带着一整个组织。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">第 17 站</span><span class="tl-t">笛亚反击</span></button>
+            <div class="tl-card">
+              <img src="media/ev-04.jpg" alt="第 17 站标题：苍白的彩虹石，笛亚反击">
+              <h4>苍白的彩虹石</h4>
+              <p>“苍白的彩虹石，笛亚反击!?”——第一次，她自己站到了前面，没有再等人来救。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">同行</span><span class="tl-t">读星图的人</span></button>
+            <div class="tl-card">
+              <img src="media/p-dy.jpg" alt="片头曲中的笛亚">
+              <h4>航线由她念出来</h4>
+              <p>飞船负责飞，麦当负责闯，笛亚负责告诉他们星星在哪。三个人缺一不可。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">信念</span><span class="tl-t">相信奇迹</span></button>
+            <div class="tl-card">
+              <img src="media/still-01.jpg" alt="片头曲中的宇宙画面">
+              <h4>她和奇迹一样了不起</h4>
+              <p>“相信奇迹的人，本身就和奇迹一样了不起。”这句台词，她比谁都有资格说。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 06 米龙 -->
+  <section class="st st-person st-r" id="s6" aria-hidden="true" data-title="米龙">
+    <div class="st-in p-grid">
+      <figure class="p-visual rv" style="--i:0">
+        <video class="p-video" data-audio src="media/milong.mp4" poster="media/milong.jpg" preload="metadata" playsinline></video>
+        <button class="p-play" type="button" aria-label="播放米龙片段，带声音">
+          <span class="tri" aria-hidden="true"></span><span class="p-play-t">播放片段 · 带声音</span>
+        </button>
+        <figcaption>人物片段 · 11.4s / 米龙</figcaption>
+      </figure>
+      <div class="p-side">
+        <p class="kicker rv" style="--i:1">06 — 人物 · 米龙</p>
+        <h2 class="p-name rv" style="--i:2">米龙</h2>
+        <p class="p-en rv" style="--i:3">MI LONG</p>
+        <blockquote class="p-quote rv" style="--i:4">「跪在地上的命运了吧」</blockquote>
+        <ol class="tl rv" style="--i:5">
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">登场</span><span class="tl-t">锁链与墨镜</span></button>
+            <div class="tl-card">
+              <img src="media/milong.jpg" alt="米龙片段画面：墨镜与锁链">
+              <h4>一道不肯低头的剪影</h4>
+              <p>片头曲里他缠着锁链、戴着一副不摘的墨镜，站在所有人都不愿意站的位置上。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">台词</span><span class="tl-t">斩无不断</span></button>
+            <div class="tl-card">
+              <img src="media/still-06.jpg" alt="片头曲中的战斗画面">
+              <h4>刀比话快</h4>
+              <p>“斩无不断”“金色天际线”——他的台词全部是动词，没有一句解释自己。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">立场</span><span class="tl-t">跪着的命运</span></button>
+            <div class="tl-card">
+              <img src="media/still-15.jpg" alt="片头曲结尾的风筝与手">
+              <h4>他不跪</h4>
+              <p>“跪在地上的命运了吧”——这句话是问句，也是宣判。他从来不打算接受命定的位置。</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <button class="tl-dot" type="button" aria-expanded="false"><span class="tl-y">留白</span><span class="tl-t">只出现在片头</span></button>
+            <div class="tl-card">
+              <img src="media/milong.jpg" alt="米龙片段画面">
+              <h4>关于他，片子说得很少</h4>
+              <p>这一页只写片头曲里看得见的部分。剩下的留给正片，不替原作补台词。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 07 事件 -->
+  <section class="st st-events" id="s7" aria-hidden="true" data-title="事件">
+    <div class="st-in">
+      <div class="ev-hd">
+        <p class="kicker rv" style="--i:0">07 — 事件 / 经典战役</p>
+        <h2 class="h2 rv" style="--i:1">五个绕不过去的节点</h2>
+        <p class="body ev-sub rv" style="--i:2">点开每一条，看它留在片子里的是哪一帧。</p>
+      </div>
+      <div class="ev-grid">
+        <article class="ev">
+          <button class="ev-head" type="button" aria-expanded="false">
+            <span class="ev-no">01</span>
+            <span class="ev-t">第 1 站 · 风筝见证</span>
+            <span class="ev-more">展开</span>
+          </button>
+          <div class="ev-body">
+            <img src="media/ev-01.jpg" alt="第 1 站标题画面">
+            <p>“风筝见证，我要去彩虹海！”整部片子的起点，是一只被放上天的风筝。没有飞船的人，先证明自己配得上出发。</p>
+          </div>
+        </article>
+        <article class="ev">
+          <button class="ev-head" type="button" aria-expanded="false">
+            <span class="ev-no">02</span>
+            <span class="ev-t">第 6 站 · 兔子诅咒</span>
+            <span class="ev-more">展开</span>
+          </button>
+          <div class="ev-body">
+            <img src="media/ev-02.jpg" alt="第 6 站标题画面">
+            <p>“兔子诅咒，所有人的背叛。”咕咚的过去在这里被翻开：一个国家、一群人，和一个只剩王冠的国王。</p>
+          </div>
+        </article>
+        <article class="ev">
+          <button class="ev-head" type="button" aria-expanded="false">
+            <span class="ev-no">03</span>
+            <span class="ev-t">第 12 站 · 白色的野兽</span>
+            <span class="ev-more">展开</span>
+          </button>
+          <div class="ev-body">
+            <img src="media/ev-03.jpg" alt="第 12 站标题画面">
+            <p>“撕碎寒风！白色的野兽。”走到这里，冷已经不是天气，是拦在航线上的东西。</p>
+          </div>
+        </article>
+        <article class="ev">
+          <button class="ev-head" type="button" aria-expanded="false">
+            <span class="ev-no">04</span>
+            <span class="ev-t">第 17 站 · 笛亚反击</span>
+            <span class="ev-more">展开</span>
+          </button>
+          <div class="ev-body">
+            <img src="media/ev-04.jpg" alt="第 17 站标题画面">
+            <p>“苍白的彩虹石，笛亚反击!?”被保护的人第一次自己出手，问号比感叹号更响。</p>
+          </div>
+        </article>
+        <article class="ev">
+          <button class="ev-head" type="button" aria-expanded="false">
+            <span class="ev-no">05</span>
+            <span class="ev-t">第 22 站 · 格斗的螺旋</span>
+            <span class="ev-more">展开</span>
+          </button>
+          <div class="ev-body">
+            <img src="media/ev-05.jpg" alt="第 22 站标题画面">
+            <p>“用心向前！格斗的螺旋。”越往后打，越不像在打人，像在跟命运掰手腕。</p>
+          </div>
+        </article>
+        <p class="ev-note">五张标题卡都取自片尾合集（第 1–22 站），画面本身来自原作。</p>
+      </div>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 08 尾声 -->
+  <section class="st st-outro" id="s8" aria-hidden="true" data-title="尾声">
+    <div class="st-in">
+      <p class="kicker rv" style="--i:0">08 — 尾声</p>
+      <h2 class="out-h rv" style="--i:1">如果你也记得那句<span class="nw">「再飞行」</span>，<br>就回去看一遍。</h2>
+      <p class="body rv" style="--i:2">没看过的人，从第 1 集开始；看过的人，知道自己该从哪一集开始。</p>
+      <a class="out-link rv" style="--i:3" href="https://www.bilibili.com/video/BV1Vt4y1S7fJ" target="_blank" rel="noopener">在 B 站看这条片头曲 →</a>
+      <dl class="colophon rv" style="--i:4">
+        <dt>片源</dt><dd>BV1Vt4y1S7fJ</dd>
+        <dt>时长</dt><dd>91.393 s</dd>
+        <dt>画面</dt><dd>1920 × 1080 / 30 fps</dd>
+        <dt>人物片段</dt><dd>4 段，全部来自原片</dd>
+      </dl>
+      <footer class="foot rv" style="--i:5">
+        <p>非官方粉丝致敬站。片头曲《再飞行》的词曲、演唱与全部画面版权归原作者与出品方所有，本站仅作介绍与回忆用途，不用于任何商业目的。</p>
+        <p class="foot-2">背景片源：bilibili BV1Vt4y1S7fJ · 人物片段取自用户提供的素材 · 页面不使用任何生成图或滤镜冒充原画</p>
+      </footer>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+  <!-- 09 收尾 -->
+  <section class="st st-final" id="s9" aria-hidden="true" data-title="收尾">
+    <div class="st-in final-in">
+      <video class="final-v" id="finalv" src="media/final.mp4" poster="media/final.jpg" playsinline preload="metadata" loop></video>
+      <p class="final-line rv" style="--i:1">第 1 站到第 22 站，每一站都有名字；<br>只有彩虹海，一直没写上门牌号。</p>
+      <footer class="foot foot-final rv" style="--i:2">
+        <p>非官方粉丝致敬站。片段版权归原作者与出品方所有，仅作介绍与回忆用途。</p>
+      </footer>
+    </div>
+    <span class="anchor" aria-hidden="true"></span>
+  </section>
+
+</main>
+
+<nav class="nav" aria-label="分屏导航">
+  <button class="nav-btn" id="prev" type="button" aria-label="上一站">← 上一站</button>
+  <button class="nav-btn nav-next" id="next" type="button" aria-label="下一站">下一站 →</button>
+</nav>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
