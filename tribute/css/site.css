@@ -773,7 +773,7 @@ button { font: inherit; color: inherit; }
   .p-visual { order: 0 !important; }
   .p-side { order: 1 !important; }
   .p-video { aspect-ratio: 16 / 10; max-height: 30vh; }
-  .p-visual figcaption { bottom: 6px; }
+  .p-visual figcaption { display: none; }
   .p-name { font-size: 34px; }
   .p-en { margin: 6px 0 14px; font-size: 10px; }
   .p-quote { font-size: 14px; margin-bottom: 18px; padding-left: 12px; }
