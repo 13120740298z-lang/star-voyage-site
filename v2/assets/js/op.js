@@ -124,7 +124,10 @@
       mediaVideo.preload = 'auto';
       try {
         mediaVideo.currentTime = 0;
-        if (mediaVideo.paused) mediaVideo.play();
+        if (mediaVideo.paused) {
+          var pr = mediaVideo.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        }
       } catch (e) {}
     }
     lastLyric = -2;
