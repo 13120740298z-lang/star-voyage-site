@@ -839,9 +839,16 @@
 
     if (opts.instant) return;
 
+    // 阶梯锁时长跟随该屏的 OP 过场时长（--sd），保证"一步一屏"卡在剪辑节奏上
+    var stepDur = DUR;
+    try {
+      var sd = getComputedStyle(screens[i]).getPropertyValue('--sd');
+      if (sd) stepDur = parseFloat(sd) || DUR;
+    } catch (e) {}
+
     locked = true;
     clearTimeout(lockTimer);
-    lockTimer = setTimeout(function () { locked = false; }, DUR + 90);
+    lockTimer = setTimeout(function () { locked = false; }, Math.max(stepDur + 60, 620));
   }
 
   /* ---------- 输入：滚轮（阶梯 + 手势锁） ---------- */
@@ -857,7 +864,12 @@
     stage.addEventListener('wheel', function (e) {
       if (e.ctrlKey) return;
       e.preventDefault();
-      if (locked) return;
+      if (locked) {
+        // 锁定期内的惯性事件继续延长手势锁，避免解锁瞬间被余量推走第二屏
+        clearTimeout(burstTimer);
+        burstTimer = setTimeout(function () { burstActive = false; }, 260);
+        return;
+      }
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) * 1.2) return;
 
       // 一次手势只走一屏：手势期间忽略后续惯性事件
