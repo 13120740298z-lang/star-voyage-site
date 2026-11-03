@@ -152,8 +152,11 @@
     for (var k = 0; k < S.stations.length; k++) if (S.stations[k].id === sec.id) kind = S.stations[k].kind;
 
     if (kind === "person") {
+      /* 人物片段不自动起播：必须由用户点播放键或时间线节点，才出声 */
       var v = sec.querySelector(".p-video");
-      if (v && state.audioOn) startClip(v, 0, false);
+      if (v) v.muted = !state.audioOn;
+      var vis = v && v.closest(".p-visual");
+      if (vis) vis.classList.remove("playing");
     } else if (kind === "final") {
       if (finalv) {
         finalv.muted = !state.audioOn;
@@ -198,6 +201,8 @@
       t.classList.toggle("on", i === state.i);
       t.setAttribute("aria-selected", i === state.i ? "true" : "false");
     });
+    /* 收尾屏保持安静：隐去底部上一站/下一站，仅留刻度与纸飞机 */
+    document.body.classList.toggle("at-final", currentKind() === "final");
   }
 
   /* ---------------- 纸飞机航线 ---------------- */

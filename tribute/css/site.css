@@ -660,6 +660,10 @@ button { font: inherit; color: inherit; }
 .nav-btn[disabled] { opacity: 0.34; cursor: default; }
 .nav-next { background: rgba(207, 167, 54, 0.14); }
 
+/* 收尾屏保持安静：底部导航隐去（刻度、键盘与纸飞机仍可离开） */
+.nav { transition: opacity .35s ease, visibility .35s; }
+.at-final .nav { opacity: 0; visibility: hidden; pointer-events: none; }
+
 /* ---------- 手机 390×844 ---------- */
 
 @media (max-width: 640px) {
