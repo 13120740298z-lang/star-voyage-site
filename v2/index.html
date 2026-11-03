@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070b">
+<title>星游记 · 新作启航 | RAINBOW SEA</title>
+<meta name="description" content="星游记新作发布概念站：国王号沿一条未登记的航线，从启航点飞向彩虹海。七屏滚动叙事，程序化星海与航线可视化。">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/op.css">
+</head>
+<body class="is-booting">
+
+<div class="stage" id="stage">
+
+  <!-- 程序化星海与航线 -->
+  <canvas id="space" class="layer-space" aria-hidden="true"></canvas>
+  <canvas id="vfx" class="layer-vfx" aria-hidden="true"></canvas>
+  <div class="layer-grid" aria-hidden="true"></div>
+  <div class="layer-grain" aria-hidden="true"></div>
+  <div class="layer-vignette" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-cn">星游记</span>
+      <span class="brand-en">RAINBOW SEA</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="tc" id="timecode" aria-hidden="true">00:00:00:00</span>
+      <span class="chip">新作 · 首曝</span>
+    </div>
+  </header>
+
+  <!-- 极简航点刻度，不是传统导航栏 -->
+  <nav class="rail" aria-label="航点索引">
+    <span class="rail-line" aria-hidden="true"><i id="railFill"></i></span>
+    <ol class="rail-dots" id="railDots"></ol>
+  </nav>
+
+  <div class="hud" aria-hidden="true">
+    <div class="hud-left">
+      <span class="hud-key">SCROLL</span>
+      <span class="hud-text">滚轮 / 滑动 · 一阶一屏</span>
+    </div>
+    <div class="hud-right">
+      <span class="hud-key" id="wpCode">WP-01</span>
+      <span class="hud-text" id="wpName">启航点</span>
+    </div>
+  </div>
+
+  <main id="screens">
+
+    <!-- 01 开场 -->
+    <section class="screen screen-open is-active" id="s1" data-name="启航点" data-cam="0.52" data-anchor="0.60" aria-label="第一屏：开场">
+      <div class="wrap open-wrap">
+        <p class="eyebrow" data-reveal style="--d:80ms">官方首曝 · 概念预告<span class="sep">/</span>STAR VOYAGE</p>
+        <h1 class="logo" data-reveal style="--d:180ms">
+          <span class="logo-cn">星游记</span>
+          <span class="logo-en">R A I N B O W &nbsp; S E A</span>
+        </h1>
+        <p class="tagline" data-reveal style="--d:320ms">所有被称作谎言的远方，<br>都等着有人出发。</p>
+        <div class="open-foot">
+          <p class="body" data-reveal style="--d:420ms">银河眼封存了地球的全部航道，彩虹海从此不在任何一张星图上。十三年后，一艘被注销舷号的旧船在静默中重新点火。没有护航，没有许可，只有一条没人飞过的航线。故事，从这一秒开始。</p>
+          <div class="open-sig" data-reveal style="--d:500ms">
+            <span class="sig-year">2026</span>
+            <span class="sig-line" aria-hidden="true"></span>
+            <span class="sig-cn">新作启航</span>
+          </div>
+        </div>
+      </div>
+      <div class="frame-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <!-- 02 世界与势力 -->
+    <section class="screen screen-world" id="s2" data-name="星海公约环" data-cam="0.70" data-anchor="0.74" aria-label="第二屏：世界与势力">
+      <div class="wrap grid-world">
+        <div class="col-text">
+          <p class="eyebrow" data-reveal>势力 · 星海公约</p>
+          <h2 class="h2" data-reveal style="--d:60ms">星海纪年</h2>
+          <div class="rule" data-reveal style="--d:120ms"><i></i><span>YEAR 13 · AFTER THE SILENCE</span></div>
+          <p class="body" data-reveal style="--d:180ms">星际联盟维持着星系之间的航线与贸易，银河眼以五色眼之名接管了所有未经许可的跃迁，黑旗在边缘星域劫掠商船，自由者游走在三方之外。所有人都在争夺同一件东西：一张能把船带到彩虹海的坐标。</p>
+
+          <div class="gate gate--sm" data-slot="02" data-src="../assets/media/02_world.mp4" style="--d:240ms">
+            <div class="gate-frame">
+              <span class="gate-corner tl"></span><span class="gate-corner tr"></span><span class="gate-corner bl"></span><span class="gate-corner br"></span>
+              <span class="gate-sweep" aria-hidden="true"></span>
+              <span class="gate-cross" aria-hidden="true"></span>
+              <div class="gate-mark">位 02</div>
+              <div class="gate-center">
+                <strong>世界观片段</strong>
+                <span>16:9 · 8–15s · 官方 PV 待接入</span>
+              </div>
+              <div class="gate-foot"><span>02_world.mp4</span><span>AWAITING FOOTAGE</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-figure" data-reveal style="--d:220ms">
+          <div class="fig-head"><span>势力关系 / FACTION MAP</span><span>SCALE · 1 : ∞</span></div>
+          <div class="fig-canvas">
+            <svg class="faction" viewBox="0 0 640 520" role="img" aria-label="势力关系图：星际联盟、银河眼、黑旗、自由者围绕未登记的彩虹海坐标对峙">
+              <defs>
+                <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#f0b45f" stop-opacity=".28"/>
+                  <stop offset="100%" stop-color="#f0b45f" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="seaGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#8fe4ff" stop-opacity=".85"/>
+                  <stop offset="100%" stop-color="#8fe4ff" stop-opacity=".15"/>
+                </linearGradient>
+              </defs>
+
+              <g class="faction-grid" aria-hidden="true">
+                <line x1="0" y1="130" x2="640" y2="130"/><line x1="0" y1="260" x2="640" y2="260"/>
+                <line x1="0" y1="390" x2="640" y2="390"/><line x1="160" y1="0" x2="160" y2="520"/>
+                <line x1="320" y1="0" x2="320" y2="520"/><line x1="480" y1="0" x2="480" y2="520"/>
+              </g>
+
+              <g class="edges" aria-hidden="true">
+                <path class="edge edge--conflict" d="M188 158 Q 300 92 408 128"/>
+                <text class="edge-label" x="300" y="92">封锁 / BLOCKADE</text>
+                <path class="edge edge--conflict" d="M168 190 Q 120 280 132 358"/>
+                <text class="edge-label" x="92" y="282">对峙 / STANDOFF</text>
+                <path class="edge edge--conflict" d="M452 176 Q 468 288 434 378"/>
+                <text class="edge-label" x="486" y="284">禁航 / NO-GO</text>
+                <path class="edge edge--trade" d="M186 402 Q 300 448 402 414"/>
+                <text class="edge-label" x="272" y="452">借道 / PASSAGE</text>
+                <path class="edge edge--bounty" d="M412 170 Q 232 260 178 396"/>
+                <text class="edge-label" x="262" y="322">悬赏 / BOUNTY</text>
+                <path class="edge edge--dash" d="M402 436 Q 356 452 328 452"/>
+              </g>
+
+              <g class="node node--league" transform="translate(152,152)">
+                <circle class="n-halo" r="56"/><circle class="n-ring" r="40"/><circle class="n-core" r="3"/>
+                <text class="n-cn" y="-58">星际联盟</text><text class="n-en" y="-44">INTERSTELLAR LEAGUE</text>
+              </g>
+
+              <g class="node node--eye" transform="translate(470,140)">
+                <circle class="n-halo n-halo--warm" r="86" fill="url(#eyeGlow)"/>
+                <circle class="n-ring n-ring--warm" r="58"/>
+                <circle class="n-ring n-ring--thin" r="72"/>
+                <g class="five-eyes" aria-hidden="true">
+                  <circle cx="-30" cy="-16" r="2.4"/><circle cx="-12" cy="-34" r="2.4"/>
+                  <circle cx="18" cy="-32" r="2.4"/><circle cx="34" cy="-8" r="2.4"/><circle cx="6" cy="4" r="2.4"/>
+                </g>
+                <text class="n-cn" y="-88">银河眼</text><text class="n-en" y="-74">MILKY WAY EYE</text>
+              </g>
+
+              <g class="node node--black" transform="translate(120,400)">
+                <circle class="n-halo" r="46"/><circle class="n-ring n-ring--dash" r="32"/>
+                <text class="n-cn" y="-50">黑旗</text><text class="n-en" y="-36">BLACK FLAG</text>
+              </g>
+
+              <g class="node node--free" transform="translate(430,420)">
+                <circle class="n-halo" r="50"/><circle class="n-ring n-ring--dash" r="36"/>
+                <text class="n-cn" y="-54">自由者</text><text class="n-en" y="-40">FREE RUNNERS</text>
+              </g>
+
+              <g class="node node--sea" transform="translate(300,452)">
+                <polygon class="n-diamond" points="0,-26 26,0 0,26 -26,0"/>
+                <text class="n-cn n-cn--sea" y="42">彩虹海 · 未登记坐标</text>
+              </g>
+
+              <text class="fig-note" x="16" y="508">DIAGRAM 02 — 关系非军事同盟，仅表示航线权限与冲突方向</text>
+            </svg>
+          </div>
+          <div class="fig-foot">
+            <span><i class="lg lg--solid"></i>对峙</span>
+            <span><i class="lg lg--dash"></i>封锁 / 禁航</span>
+            <span><i class="lg lg--trade"></i>借道</span>
+            <span><i class="lg lg--diamond"></i>未登记坐标</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 三个主角 -->
+    <section class="screen screen-cast" id="s3" data-name="亚亚罗残环" data-cam="0.46" data-anchor="0.46" aria-label="第三屏：三位主角">
+      <div class="wrap grid-cast">
+        <div class="cast-left">
+          <p class="eyebrow" data-reveal>人物 · 国王号编制 03</p>
+          <h2 class="h2" data-reveal style="--d:60ms">三人 · 一条航线</h2>
+          <p class="lead" data-reveal style="--d:120ms">没有一支舰队，只有三个人，互相补上对方缺的那一块。</p>
+
+          <div class="cast">
+            <article class="cast-item" data-reveal style="--d:180ms">
+              <div class="cast-top"><span class="cast-no">01</span><span class="cast-role">前舱 · 战斗</span></div>
+              <h3 class="cast-name">麦当</h3>
+              <p class="cast-desc">地球少年。父亲麦林带队驶向彩虹海后再无回音，他继承了那根拉面金箍棒，也继承了整个银河眼都不承认的约定。</p>
+            </article>
+            <article class="cast-item" data-reveal style="--d:240ms">
+              <div class="cast-top"><span class="cast-no">02</span><span class="cast-role">领航 · 星图</span></div>
+              <h3 class="cast-name">笛亚</h3>
+              <p class="cast-desc">太阳系最后一位星学家。她能读懂星图上的空白，负责为国王号找到那条没有航标的路。</p>
+            </article>
+            <article class="cast-item" data-reveal style="--d:300ms">
+              <div class="cast-top"><span class="cast-no">03</span><span class="cast-role">舰长 · 亚亚罗</span></div>
+              <h3 class="cast-name">咕咚·萌西</h3>
+              <p class="cast-desc">亚亚罗的国王。丢了王座，也丢了回家的坐标，只剩这艘国王号，和一句没说完的加冕誓词。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="cast-right">
+          <div class="gate gate--lg" data-slot="03" data-src="../assets/media/03_cast.mp4" data-reveal style="--d:260ms">
+            <div class="gate-frame">
+              <span class="gate-corner tl"></span><span class="gate-corner tr"></span><span class="gate-corner bl"></span><span class="gate-corner br"></span>
+              <span class="gate-sweep" aria-hidden="true"></span>
+              <span class="gate-cross" aria-hidden="true"></span>
+              <div class="gate-mark">位 03</div>
+              <div class="gate-center">
+                <strong>主角片段</strong>
+                <span>16:9 · 6–12s · 官方人物 PV 待接入</span>
+              </div>
+              <div class="gate-foot"><span>03_cast.mp4</span><span>AWAITING FOOTAGE</span></div>
+            </div>
+          </div>
+          <div class="cast-meta" data-reveal style="--d:320ms">
+            <span>CAST · 03</span>
+            <span>2 人 + 1 舰长</span>
+            <span>无护航编队</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 国王号 -->
+    <section class="screen screen-ship" id="s4" data-name="封锁线外" data-cam="0.95" data-anchor="0.34" aria-label="第四屏：国王号">
+      <div class="wrap grid-ship">
+        <div class="ship-left">
+          <p class="eyebrow" data-reveal>旗舰 · 亚亚罗王船</p>
+          <h2 class="h2 h2--latin" data-reveal style="--d:60ms">国王号<span>KING'S VESSEL / AR-01</span></h2>
+          <div class="rule" data-reveal style="--d:120ms"><i></i><span>HULL 214M · CLASS KING</span></div>
+          <p class="body" data-reveal style="--d:160ms">亚亚罗最后的一艘王船。外壳沿用加冕礼的旧装甲，动力舱却被改成了彩虹石共鸣阵列。它不擅长战斗，只擅长在别人认定没有路的地方，飞出一条路来。</p>
+
+          <dl class="specs" data-reveal style="--d:220ms">
+            <div><dt>舷号</dt><dd>AR-01</dd></div>
+            <div><dt>全长</dt><dd>214<span>m</span></dd></div>
+            <div><dt>巡航</dt><dd>0.87<span>c</span></dd></div>
+            <div><dt>跃迁</dt><dd>三级</dd></div>
+            <div><dt>编制</dt><dd>03<span>人</span></dd></div>
+            <div><dt>动力</dt><dd>彩虹石共鸣</dd></div>
+          </dl>
+
+          <div class="gate gate--sm gate--ship" data-slot="04" data-src="../assets/media/04_ship.mp4" data-reveal style="--d:280ms">
+            <div class="gate-frame">
+              <span class="gate-corner tl"></span><span class="gate-corner tr"></span><span class="gate-corner bl"></span><span class="gate-corner br"></span>
+              <span class="gate-sweep" aria-hidden="true"></span>
+              <span class="gate-cross" aria-hidden="true"></span>
+              <div class="gate-mark">位 04</div>
+              <div class="gate-center">
+                <strong>船体镜头</strong>
+                <span>16:9 · 8–15s · 官方船设片段待接入</span>
+              </div>
+              <div class="gate-foot"><span>04_ship.mp4</span><span>AWAITING FOOTAGE</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ship-right" data-reveal style="--d:240ms">
+          <div class="panel">
+            <div class="panel-head">
+              <span>航线 / FLIGHT PLAN</span><span>06 段</span>
+            </div>
+            <svg class="route-mini" viewBox="0 0 420 360" role="img" aria-label="国王号航线图：启航点、星海公约环、亚亚罗残环、封锁线、跃迁窗口、彩虹海">
+              <g class="rm-grid" aria-hidden="true">
+                <line x1="40" y1="40" x2="380" y2="40"/><line x1="40" y1="140" x2="380" y2="140"/>
+                <line x1="40" y1="240" x2="380" y2="240"/><line x1="40" y1="320" x2="380" y2="320"/>
+                <line x1="40" y1="40" x2="40" y2="320"/><line x1="156" y1="40" x2="156" y2="320"/>
+                <line x1="272" y1="40" x2="272" y2="320"/><line x1="380" y1="40" x2="380" y2="320"/>
+              </g>
+              <path class="rm-path" d="M54 300 C 120 280, 132 214, 186 196 S 268 236, 300 160 S 332 80, 372 62"/>
+              <g class="rm-nodes">
+                <g transform="translate(54,300)"><circle r="3.5"/><text x="8" y="14">WP-01 启航</text></g>
+                <g transform="translate(186,196)"><circle r="2.5"/><text x="8" y="14">WP-02 公约环</text></g>
+                <g transform="translate(252,208)"><circle r="2.5"/><text x="8" y="-10">WP-03 残环</text></g>
+                <g transform="translate(300,160)"><circle r="5" class="hot"/><text x="10" y="4">WP-04 封锁线</text></g>
+                <g transform="translate(336,104)"><circle r="2.5"/><text x="10" y="-6">WP-05 跃迁窗口</text></g>
+                <g transform="translate(372,62)"><circle r="3.5" class="end"/><text x="-92" y="-10">WP-06 彩虹海</text></g>
+              </g>
+              <text class="rm-note" x="54" y="340">航线未登记 · 坐标由领航员手绘</text>
+            </svg>
+            <div class="panel-foot">
+              <span>当前航点</span><span class="hot">WP-04 · 封锁线外</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 故事与冲突 -->
+    <section class="screen screen-story" id="s5" data-name="跃迁窗口" data-cam="0.72" data-anchor="0.68" aria-label="第五屏：故事与冲突">
+      <div class="wrap story-wrap">
+        <div class="story-head">
+          <p class="eyebrow" data-reveal>主线 · 封锁线之外</p>
+          <h2 class="h2 h2--story" data-reveal style="--d:60ms">没有航标的海</h2>
+        </div>
+
+        <div class="story-grid">
+          <div class="beats">
+            <div class="beat" data-reveal style="--d:140ms">
+              <span class="beat-t">T-72:00</span>
+              <div><h4>封锁线合拢</h4><p>五色眼接管全部跃迁窗口，所有未登记航线判定为敌。</p></div>
+            </div>
+            <div class="beat" data-reveal style="--d:200ms">
+              <span class="beat-t">T-48:00</span>
+              <div><h4>静默离港</h4><p>国王号关闭应答器，脱离联盟航线，从民用航道下潜。</p></div>
+            </div>
+            <div class="beat" data-reveal style="--d:260ms">
+              <span class="beat-t">T-00:00</span>
+              <div><h4>彩虹石共振</h4><p>航线在船首折叠，前方没有星图，也没有可以返航的路。</p></div>
+            </div>
+          </div>
+
+          <div class="story-side">
+            <p class="body" data-reveal style="--d:300ms">银河眼把彩虹海从星图上抹去，并宣布任何接近该坐标的船只将被直接击落。国王号必须在封锁线合拢之前穿过第三跃迁窗口，而船上的三个人，各自藏着一个不能说的目的地。</p>
+            <div class="alert" data-reveal style="--d:360ms">
+              <span class="alert-dot" aria-hidden="true"></span>
+              <span>航道状态 · 已关闭</span>
+              <span class="alert-code">ERR 404 / UNCHARTED</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track">
+            <span>封锁线</span><i>◆</i><span>静默航行</span><i>◆</i><span>未登记坐标</span><i>◆</i><span>五色眼接管</span><i>◆</i><span>第三跃迁窗口</span><i>◆</i><span>禁止返航</span><i>◆</i>
+            <span>封锁线</span><i>◆</i><span>静默航行</span><i>◆</i><span>未登记坐标</span><i>◆</span><span>五色眼接管</span><i>◆</i><span>第三跃迁窗口</span><i>◆</i><span>禁止返航</span><i>◆</i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 程序化视觉 -->
+    <section class="screen screen-vfx" id="s6" data-name="共振 · 跃迁" data-cam="0.60" data-anchor="0.55" aria-label="第六屏：程序化视觉展示">
+      <div class="wrap vfx-wrap">
+        <div class="vfx-top">
+          <p class="eyebrow" data-reveal>程序化视觉<span class="sep">/</span>无实拍素材</p>
+        </div>
+        <h2 class="vfx-title" data-reveal style="--d:80ms">
+          <span class="vfx-cn">跃迁</span>
+          <span class="vfx-en">T R A N S I T</span>
+        </h2>
+        <div class="vfx-bottom">
+          <div class="telemetry" data-reveal style="--d:240ms">
+            <div><span>FPS</span><b id="tFps">--</b></div>
+            <div><span>PARTICLES</span><b id="tParticles">--</b></div>
+            <div><span>共振</span><b>97.3%</b></div>
+            <div><span>坐标</span><b>未登记</b></div>
+          </div>
+          <p class="body vfx-body" data-reveal style="--d:300ms">当彩虹石与旧装甲共振，航线会在瞬间折叠。这一屏没有实拍素材：所有粒子、轨迹与光斑都由本地代码实时生成，随帧率呼吸。</p>
+        </div>
+      </div>
+
+      <div class="gate gate--dock" data-slot="06" data-src="../assets/media/06_vfx.mp4" data-reveal style="--d:360ms">
+        <div class="gate-frame">
+          <span class="gate-corner tl"></span><span class="gate-corner tr"></span><span class="gate-corner bl"></span><span class="gate-corner br"></span>
+          <span class="gate-sweep" aria-hidden="true"></span>
+          <span class="gate-cross" aria-hidden="true"></span>
+          <div class="gate-mark">位 06</div>
+          <div class="gate-center">
+            <strong>特效片段（可选）</strong>
+            <span>16:9 · 6–10s · 官方 VFX 待接入</span>
+          </div>
+          <div class="gate-foot"><span>06_vfx.mp4</span><span>OPTIONAL</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 CTA -->
+    <section class="screen screen-cta" id="s7" data-name="彩虹海" data-cam="0.40" data-anchor="0.54" aria-label="第七屏：上映与预约">
+      <div class="wrap cta-wrap">
+        <p class="eyebrow" data-reveal>终点 · 彩虹海坐标<span class="sep">/</span>COORD. UNLISTED</p>
+        <h2 class="cta-title" data-reveal style="--d:70ms">出发的人，<br><em>从来不算少数。</em></h2>
+
+        <div class="cta-grid">
+          <p class="body" data-reveal style="--d:160ms">国王号已经越过封锁线。接下来的航段不在任何星图上，也不在任何人的许可里。如果你也曾被说过「那只是谎言」，这一程，算你一个。</p>
+
+          <div class="release" data-reveal style="--d:220ms">
+            <div class="release-head"><span>上映信息</span><span>信息位 · 待官宣</span></div>
+            <dl>
+              <div><dt>档期</dt><dd>待官宣</dd></div>
+              <div><dt>发行</dt><dd>星海计划</dd></div>
+              <div><dt>制式</dt><dd>IMAX · 中国巨幕</dd></div>
+              <div><dt>预约</dt><dd>通道未开启</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="cta-row" data-reveal style="--d:300ms">
+          <button class="btn btn--primary" id="ctaBook" type="button">
+            <span>预约启航</span>
+            <i aria-hidden="true">→</i>
+          </button>
+          <button class="btn btn--ghost" id="ctaTop" type="button">返回起点</button>
+        </div>
+
+        <p class="footnote" data-reveal style="--d:380ms">概念演示站点 · 非官方发布物料 · 文案与视觉为原创设计，不含官方素材</p>
+      </div>
+      <div class="cta-glow" aria-hidden="true"></div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="boot" id="boot" aria-hidden="true"><span></span></div>
+</div>
+
+<noscript>
+  <div class="nojs">本站需要 JavaScript 才能呈现分屏叙事。<br>请在支持脚本的浏览器中打开。</div>
+</noscript>
+
+<script src="assets/js/site.js"></script>
+<script src="assets/js/op.js"></script>
+</body>
+</html>
