@@ -960,7 +960,11 @@
     v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute('playsinline', '');
     v.preload = 'metadata';
     // 海报静帧取自同一 OP 片源（同名 .jpg），弱网下先出画面再等视频
-    v.poster = src.replace(/\.mp4$/i, '.jpg');
+    var posterSrc = src.replace(/\.mp4$/i, '.jpg');
+    v.poster = posterSrc;
+    var probe = new Image();
+    probe.onload = function () { gate.classList.add('has-poster'); };
+    probe.src = posterSrc;
     v.addEventListener('canplay', function () {
       gate.classList.add('is-loaded');
       var p = v.play();
