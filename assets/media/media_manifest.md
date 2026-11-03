@@ -25,7 +25,7 @@
 <div class="gate gate--sm" data-slot="02" data-src="../assets/media/02_world.mp4">
 ```
 
-`data-src` 为空时脚本不会发起视频请求；填入路径后自动注入 `<video muted loop playsinline preload="metadata">`，`canplay` 后隐藏中心说明与底部信息。
+`data-src` 为空时脚本不会发起视频请求；填入路径后自动注入 `<video muted loop playsinline preload="metadata">`，`canplay` 后隐藏中心说明与底部信息。同名 `.jpg` 为该片段静帧海报（同样取自 OP 原片），弱网下先出画面再等视频。
 
 ## 四、文件规格
 
