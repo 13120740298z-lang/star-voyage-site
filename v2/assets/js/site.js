@@ -959,6 +959,8 @@
     var v = document.createElement('video');
     v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute('playsinline', '');
     v.preload = 'metadata';
+    // 海报静帧取自同一 OP 片源（同名 .jpg），弱网下先出画面再等视频
+    v.poster = src.replace(/\.mp4$/i, '.jpg');
     v.addEventListener('canplay', function () {
       gate.classList.add('is-loaded');
       var p = v.play();
