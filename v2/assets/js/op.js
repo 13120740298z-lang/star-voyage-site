@@ -113,7 +113,15 @@
     stop();
     seg = SEG[index] || SEG[0];
     mediaVideo = screens[index] ? screens[index].querySelector('.gate video') : null;
+    // 只让当前屏的片子占用带宽：其余机位暂停，当前机位优先加载
+    var allVideos = document.querySelectorAll('.gate video');
+    for (var vi = 0; vi < allVideos.length; vi++) {
+      if (allVideos[vi] !== mediaVideo) {
+        try { allVideos[vi].pause(); } catch (e) {}
+      }
+    }
     if (mediaVideo) {
+      mediaVideo.preload = 'auto';
       try {
         mediaVideo.currentTime = 0;
         if (mediaVideo.paused) mediaVideo.play();
