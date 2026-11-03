@@ -1,0 +1,87 @@
+/* =========================================================
+   星游记 · OP 改编版（v2）附加样式
+   节拍 HUD / 切点闪帧 / 分屏过场时长
+   ========================================================= */
+
+/* ---------- 每屏过场时长：取自 OP 段落剪辑密度 ---------- */
+.screen{
+  transition:opacity var(--sd) var(--ease),
+             transform calc(var(--sd) + 80ms) var(--ease),
+             visibility 0s linear calc(var(--sd) + 80ms);
+}
+.screen.is-leaving{
+  transition:opacity calc(var(--sd) - 40ms) var(--ease),
+             transform calc(var(--sd) + 80ms) var(--ease),
+             visibility 0s linear calc(var(--sd) + 80ms);
+}
+.screen:nth-child(1){--sd:480ms;}   /* A 前奏快切 */
+.screen:nth-child(2){--sd:520ms;}   /* B 暗面 */
+.screen:nth-child(3){--sd:600ms;}   /* D+E 人像 */
+.screen:nth-child(4){--sd:680ms;}   /* C 航行长镜，最稳 */
+.screen:nth-child(5){--sd:640ms;}   /* F 海与影子 */
+.screen:nth-child(6){--sd:440ms;}   /* G+H 光爆，最快 */
+.screen:nth-child(7){--sd:560ms;}   /* I 收尾 */
+.screen{--sd:600ms;}
+
+/* ---------- OP 节拍 HUD ---------- */
+.opbar{
+  position:fixed;left:50%;bottom:clamp(14px,2.2vh,20px);z-index:30;
+  width:min(600px,68vw);transform:translateX(-50%);
+  display:flex;flex-direction:column;gap:5px;pointer-events:none;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;
+  color:var(--dim);opacity:0;animation:opbarIn .8s var(--ease) .9s forwards;
+}
+@keyframes opbarIn{to{opacity:1;}}
+.opbar-head{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;}
+.opbar-head b{font-weight:400;color:rgba(240,196,130,.9);letter-spacing:.2em;}
+.opbar-head em{font-style:normal;color:rgba(150,170,195,.75);}
+.opbar-lyric{
+  font-family:var(--display);font-size:13px;letter-spacing:.14em;
+  color:rgba(242,232,214,.9);line-height:1.35;min-height:15px;
+  text-shadow:0 0 18px rgba(0,0,0,.9);
+  transition:opacity .3s linear;
+}
+.opbar-track{position:relative;height:11px;margin-top:1px;}
+.opbar-track::before{
+  content:"";position:absolute;left:0;right:0;top:6px;height:1px;
+  background:linear-gradient(90deg,rgba(160,198,232,0),rgba(160,198,232,.4) 12%,rgba(160,198,232,.4) 88%,rgba(160,198,232,0));
+}
+.op-tick{position:absolute;top:1px;width:1px;height:5px;background:rgba(170,205,236,.45);transform:translateX(-.5px);}
+.op-tick.is-major{height:8px;background:rgba(240,180,95,.6);}
+.op-playhead{
+  position:absolute;top:0;width:1px;height:11px;background:rgba(248,220,170,.95);
+  box-shadow:0 0 10px rgba(240,180,95,.7);transform:translateX(-.5px);
+  transition:none;
+}
+.opbar-side{
+  position:absolute;right:0;top:-1px;font-size:7.5px;letter-spacing:.18em;
+  color:rgba(130,150,170,.7);
+}
+
+/* ---------- 切点闪帧 ---------- */
+.op-flash{
+  position:fixed;inset:0;z-index:14;pointer-events:none;opacity:0;
+  background:radial-gradient(62% 44% at 50% 48%,rgba(255,246,228,.5),rgba(255,255,255,0) 72%);
+  mix-blend-mode:screen;
+}
+.op-flash.is-cut{animation:opCut .24s cubic-bezier(.2,.7,.3,1);}
+@keyframes opCut{0%{opacity:.5;}45%{opacity:.22;}100%{opacity:0;}}
+
+/* ---------- 第 5 屏跑马灯为节拍条让位 ---------- */
+.marquee{bottom:clamp(76px,10vh,100px);}
+
+/* ---------- 手机端 ---------- */
+@media (max-width:560px){
+  .opbar{width:88vw;bottom:50px;font-size:7.5px;letter-spacing:.12em;gap:3px;}
+  .opbar-lyric{font-size:11.5px;letter-spacing:.08em;min-height:13px;}
+  .opbar-track{height:9px;}
+  .op-tick{height:4px;}
+  .marquee{bottom:clamp(128px,16vh,150px);}
+}
+
+/* ---------- 降低动效 ---------- */
+@media (prefers-reduced-motion:reduce){
+  .opbar{animation-duration:.01ms;animation-delay:0s;}
+  .op-flash{display:none;}
+  .op-playhead{transition:none;}
+}
