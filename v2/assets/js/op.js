@@ -123,6 +123,8 @@
     if (mediaVideo) {
       mediaVideo.preload = 'auto';
       try {
+        // 之前被暂停过的片子可能一直没发起加载，强制重启一次请求
+        if (mediaVideo.readyState === 0) mediaVideo.load();
         mediaVideo.currentTime = 0;
         if (mediaVideo.paused) {
           var pr = mediaVideo.play();
